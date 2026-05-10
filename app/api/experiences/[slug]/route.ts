@@ -4,7 +4,7 @@ import { listQrLinks } from "@/lib/server/qr-store";
 export const dynamic = "force-dynamic";
 
 type RouteContext = {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 export async function GET(_request: Request, context: RouteContext) {

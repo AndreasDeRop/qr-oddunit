@@ -1,0 +1,17 @@
+{
+  "id": "oddunit-card",
+  "slug": "oddunit-card",
+  "title": "OddUnit business card",
+  "kind": "ar",
+  "destination_url": "https://oddunit.be",
+  "experience_slug": "oddunit-card",
+  "model_url": "/models/oddunit-logo.gltf",
+  "ios_model_url": null,
+  "logo_url": null,
+  "primary_cta_label": "Open oddunit.be",
+  "status": "active",
+  "scans_count": 0,
+  "last_scanned_at": null,
+  "created_at": "2026-05-10T00:00:00.000Z",
+  "updated_at": "2026-05-10T00:00:00.000Z"
+}

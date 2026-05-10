@@ -5,7 +5,7 @@ import type { QrKind, QrLink, QrStatus } from "@/lib/types";
 export const dynamic = "force-dynamic";
 
 type RouteContext = {
-  params: Promise<{ slug: string }> | { slug: string };
+  params: Promise<{ slug: string }>;
 };
 
 type UpdatePayload = {

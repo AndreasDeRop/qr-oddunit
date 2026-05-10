@@ -24,6 +24,8 @@ npm run preview
 
 Copy `.dev.vars.example` to `.dev.vars` for Worker preview values. Use `.env.local` if you also want `next dev` to see the same values.
 
+Production builds use `next build --webpack`. Next.js 16 defaults to Turbopack, but this project uses Webpack for the Cloudflare Worker build because it avoids an OpenNext runtime issue where App Router pages can fail with `components.ComponentMod.handler is not a function`.
+
 ## Cloudflare KV
 
 Create one KV namespace for QR records:
@@ -83,6 +85,12 @@ After deployment, open `/admin/`, enter `QR_ADMIN_TOKEN`, and save the prefilled
 
 ```text
 https://qr.oddunit.be/q/oddunit-card
+```
+
+You can also seed that first record directly from the repo:
+
+```bash
+npx wrangler kv key put qr:oddunit-card --path seeds/oddunit-card.json --binding QR_LINKS --preview false --remote
 ```
 
 ## Analytics
