@@ -1,0 +1,254 @@
+{
+  "asset": {
+    "version": "2.0",
+    "generator": "OddUnit QR MVP"
+  },
+  "scene": 0,
+  "scenes": [
+    {
+      "nodes": [
+        0
+      ]
+    }
+  ],
+  "nodes": [
+    {
+      "name": "OddUnit OU Mark",
+      "children": [
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ]
+    },
+    {
+      "name": "O top",
+      "mesh": 0,
+      "translation": [
+        -0.78,
+        0.55,
+        0
+      ],
+      "scale": [
+        0.9,
+        0.16,
+        0.18
+      ]
+    },
+    {
+      "name": "O bottom",
+      "mesh": 0,
+      "translation": [
+        -0.78,
+        -0.55,
+        0
+      ],
+      "scale": [
+        0.9,
+        0.16,
+        0.18
+      ]
+    },
+    {
+      "name": "O left",
+      "mesh": 0,
+      "translation": [
+        -1.15,
+        0,
+        0
+      ],
+      "scale": [
+        0.16,
+        1.1,
+        0.18
+      ]
+    },
+    {
+      "name": "O right",
+      "mesh": 0,
+      "translation": [
+        -0.41,
+        0,
+        0
+      ],
+      "scale": [
+        0.16,
+        1.1,
+        0.18
+      ]
+    },
+    {
+      "name": "U left",
+      "mesh": 1,
+      "translation": [
+        0.28,
+        0.04,
+        0
+      ],
+      "scale": [
+        0.16,
+        1.16,
+        0.18
+      ]
+    },
+    {
+      "name": "U right",
+      "mesh": 1,
+      "translation": [
+        1.08,
+        0.04,
+        0
+      ],
+      "scale": [
+        0.16,
+        1.16,
+        0.18
+      ]
+    },
+    {
+      "name": "U bottom",
+      "mesh": 1,
+      "translation": [
+        0.68,
+        -0.55,
+        0
+      ],
+      "scale": [
+        0.96,
+        0.16,
+        0.18
+      ]
+    }
+  ],
+  "materials": [
+    {
+      "name": "OddUnit Deep Ink",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.015,
+          0.032,
+          0.032,
+          1
+        ],
+        "metallicFactor": 0.12,
+        "roughnessFactor": 0.38
+      }
+    },
+    {
+      "name": "OddUnit Signal Green",
+      "pbrMetallicRoughness": {
+        "baseColorFactor": [
+          0.38,
+          0.92,
+          0.68,
+          1
+        ],
+        "metallicFactor": 0.06,
+        "roughnessFactor": 0.32
+      }
+    }
+  ],
+  "meshes": [
+    {
+      "name": "Bar Dark",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1
+          },
+          "indices": 2,
+          "material": 0
+        }
+      ]
+    },
+    {
+      "name": "Bar Green",
+      "primitives": [
+        {
+          "attributes": {
+            "POSITION": 0,
+            "NORMAL": 1
+          },
+          "indices": 2,
+          "material": 1
+        }
+      ]
+    }
+  ],
+  "accessors": [
+    {
+      "bufferView": 0,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -0.5,
+        -0.5,
+        -0.5
+      ],
+      "max": [
+        0.5,
+        0.5,
+        0.5
+      ]
+    },
+    {
+      "bufferView": 1,
+      "componentType": 5126,
+      "count": 24,
+      "type": "VEC3",
+      "min": [
+        -1,
+        -1,
+        -1
+      ],
+      "max": [
+        1,
+        1,
+        1
+      ]
+    },
+    {
+      "bufferView": 2,
+      "componentType": 5123,
+      "count": 36,
+      "type": "SCALAR",
+      "min": [
+        0
+      ],
+      "max": [
+        23
+      ]
+    }
+  ],
+  "bufferViews": [
+    {
+      "buffer": 0,
+      "byteOffset": 0,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 288,
+      "byteLength": 288,
+      "target": 34962
+    },
+    {
+      "buffer": 0,
+      "byteOffset": 576,
+      "byteLength": 72,
+      "target": 34963
+    }
+  ],
+  "buffers": [
+    {
+      "uri": "data:application/octet-stream;base64,AAAAvwAAAL8AAAA/AAAAPwAAAL8AAAA/AAAAPwAAAD8AAAA/AAAAvwAAAD8AAAA/AAAAPwAAAL8AAAC/AAAAvwAAAL8AAAC/AAAAvwAAAD8AAAC/AAAAPwAAAD8AAAC/AAAAvwAAAD8AAAA/AAAAPwAAAD8AAAA/AAAAPwAAAD8AAAC/AAAAvwAAAD8AAAC/AAAAvwAAAL8AAAC/AAAAPwAAAL8AAAC/AAAAPwAAAL8AAAA/AAAAvwAAAL8AAAA/AAAAPwAAAL8AAAA/AAAAPwAAAL8AAAC/AAAAPwAAAD8AAAC/AAAAPwAAAD8AAAA/AAAAvwAAAL8AAAC/AAAAvwAAAL8AAAA/AAAAvwAAAD8AAAA/AAAAvwAAAD8AAAC/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIA/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAAAAAAIC/AAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgD8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAAAAAAAAgL8AAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAPwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAACAvwAAAAAAAAAAAAABAAIAAAACAAMABAAFAAYABAAGAAcACAAJAAoACAAKAAsADAANAA4ADAAOAA8AEAARABIAEAASABMAFAAVABYAFAAWABcA",
+      "byteLength": 648
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+name = "qr-oddunit"
+main = ".open-next/worker.js"
+compatibility_date = "2026-05-10"
+compatibility_flags = ["nodejs_compat"]
+
+[assets]
+directory = ".open-next/assets"
+binding = "ASSETS"
+
+[observability]
+enabled = true
+
+[[kv_namespaces]]
+binding = "QR_LINKS"
+id = "dca2b6860f57495e9cc512418f5969ff"
+preview_id = "036b3375135f4debae6d46d0817fd7ae"
