@@ -1,0 +1,4 @@
+NEXT_PUBLIC_SITE_URL=https://qr.oddunit.be
+QR_ADMIN_TOKEN=replace-with-long-random-token
+STRIPE_SECRET_KEY=sk_live_replace_this
+STRIPE_WEBHOOK_SECRET=whsec_replace_this_when_webhooks_are_enabled

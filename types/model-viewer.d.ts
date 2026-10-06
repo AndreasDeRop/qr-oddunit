@@ -17,6 +17,7 @@ type ModelViewerAttributes = HTMLAttributes<HTMLElement> & {
   "touch-action"?: string;
   "interaction-prompt"?: string;
   "camera-orbit"?: string;
+  "field-of-view"?: string;
 };
 
 declare global {

@@ -18,7 +18,8 @@ export function QrPreview({ value, size = 164 }: QrPreviewProps) {
 
     QRCode.toDataURL(value, {
       width: size,
-      margin: 2,
+      margin: 4,
+      errorCorrectionLevel: "H",
       color: {
         dark: "#071414",
         light: "#ffffff"

@@ -1,4 +1,5 @@
 import { error, isValidSlug } from "@/lib/server/http";
+import { recordAnalyticsEvent } from "@/lib/server/analytics-store";
 import { getQrLink } from "@/lib/server/qr-store";
 
 export const dynamic = "force-dynamic";
@@ -20,6 +21,10 @@ export async function GET(request: Request, context: RouteContext) {
     if (!link || link.status !== "active") {
       return error("QR code not found.", 404);
     }
+
+    await recordAnalyticsEvent(link.slug, "qr_scan").catch((caught) => {
+      console.error(caught);
+    });
 
     if (link.kind === "ar") {
       const experienceSlug = link.experience_slug || link.slug;

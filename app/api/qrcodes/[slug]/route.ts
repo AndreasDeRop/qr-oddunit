@@ -1,6 +1,6 @@
 import { error, isAssetUrl, isHttpUrl, isValidSlug, json, readJson, requireAdmin } from "@/lib/server/http";
 import { getQrLink, saveQrLink } from "@/lib/server/qr-store";
-import type { QrKind, QrLink, QrStatus } from "@/lib/types";
+import type { ArPlacement, QrKind, QrLink, QrStatus } from "@/lib/types";
 
 export const dynamic = "force-dynamic";
 
@@ -21,11 +21,18 @@ type UpdatePayload = {
   ios_model_url?: string;
   ctaLabel?: string;
   primary_cta_label?: string;
+  arPlacement?: ArPlacement;
+  ar_placement?: ArPlacement;
+  arSpinSpeed?: number;
+  ar_spin_speed?: number;
+  arScale?: number;
+  ar_scale?: number;
   status?: QrStatus;
 };
 
 const validKinds = new Set<QrKind>(["redirect", "ar", "vcard"]);
 const validStatuses = new Set<QrStatus>(["active", "paused", "archived"]);
+const validArPlacements = new Set<ArPlacement>(["vertical-spin", "horizontal-rise"]);
 
 async function routeSlug(context: RouteContext) {
   return (await context.params).slug;
@@ -116,6 +123,21 @@ export async function PATCH(request: Request, context: RouteContext) {
     const ctaLabel = body.ctaLabel ?? body.primary_cta_label;
     if (typeof ctaLabel === "string") {
       update.primary_cta_label = ctaLabel || null;
+    }
+
+    const arPlacement = body.arPlacement ?? body.ar_placement;
+    if (typeof arPlacement === "string" && validArPlacements.has(arPlacement)) {
+      update.ar_placement = arPlacement;
+    }
+
+    const arSpinSpeed = body.arSpinSpeed ?? body.ar_spin_speed;
+    if (typeof arSpinSpeed === "number" && Number.isFinite(arSpinSpeed)) {
+      update.ar_spin_speed = Math.min(Math.max(arSpinSpeed, 0), 3);
+    }
+
+    const arScale = body.arScale ?? body.ar_scale;
+    if (typeof arScale === "number" && Number.isFinite(arScale)) {
+      update.ar_scale = Math.min(Math.max(arScale, 0.35), 2.4);
     }
 
     if (typeof body.status === "string" && validStatuses.has(body.status)) {

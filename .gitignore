@@ -9,3 +9,5 @@ node_modules
 cloudflare-env.d.ts
 .wrangler
 *.log
+*.tsbuildinfo
+preview-*.png

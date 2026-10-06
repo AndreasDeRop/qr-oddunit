@@ -4,17 +4,22 @@ import { FormEvent, useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import {
   Archive,
+  BarChart3,
   Box,
   Clipboard,
+  Download,
   ExternalLink,
   Loader2,
+  MousePointerClick,
   Plus,
   RefreshCw,
   Save,
+  ScanLine,
   Shield
 } from "lucide-react";
+import QRCode from "qrcode";
 import { QrPreview } from "@/components/qr-preview";
-import type { QrKind, QrLink, QrStatus } from "@/lib/types";
+import type { QrAnalytics, QrKind, QrLink, QrStatus } from "@/lib/types";
 
 type FormState = {
   title: string;
@@ -33,14 +38,17 @@ type DraftState = {
 };
 
 const defaultForm: FormState = {
-  title: "OddUnit business card",
+  title: "OddUnit Studio",
   slug: "oddunit-card",
   kind: "ar",
   destinationUrl: "https://oddunit.be",
-  modelUrl: "/models/oddunit-logo.gltf",
+  modelUrl: "/models/logo-black-studio-super-thick.gltf",
   iosModelUrl: "",
   ctaLabel: "Open oddunit.be"
 };
+
+const publicQrOrigin = process.env.NEXT_PUBLIC_SITE_URL || "https://qr.oddunit.be";
+const numberFormatter = new Intl.NumberFormat("nl-BE");
 
 function slugify(value: string) {
   return value
@@ -58,6 +66,39 @@ function adminHeaders(token: string) {
   };
 }
 
+function fallbackAnalytics(item: QrLink): QrAnalytics {
+  return {
+    slug: item.slug,
+    totalScans: item.scans_count || 0,
+    arOpens: 0,
+    markerLocks: 0,
+    ctaClicks: 0,
+    lastEventAt: item.last_scanned_at || null,
+    days: []
+  };
+}
+
+function analyticsFor(item: QrLink) {
+  return item.analytics || fallbackAnalytics(item);
+}
+
+function compactNumber(value: number) {
+  return numberFormatter.format(value);
+}
+
+function formatLastEvent(value: string | null) {
+  if (!value) {
+    return "Nog geen activiteit";
+  }
+
+  return new Intl.DateTimeFormat("nl-BE", {
+    day: "2-digit",
+    month: "2-digit",
+    hour: "2-digit",
+    minute: "2-digit"
+  }).format(new Date(value));
+}
+
 export function AdminDashboard() {
   const [token, setToken] = useState(() =>
     typeof window === "undefined" ? "" : window.localStorage.getItem("oddunit_qr_admin_token") || ""
@@ -69,13 +110,23 @@ export function AdminDashboard() {
   const [saving, setSaving] = useState(false);
   const [notice, setNotice] = useState("");
 
-  const origin = useMemo(() => {
-    if (typeof window === "undefined") {
-      return process.env.NEXT_PUBLIC_SITE_URL || "https://qr.oddunit.be";
-    }
-
-    return process.env.NEXT_PUBLIC_SITE_URL || window.location.origin;
-  }, []);
+  const origin = useMemo(() => publicQrOrigin.replace(/\/$/, ""), []);
+  const totals = useMemo(
+    () =>
+      items.reduce(
+        (sum, item) => {
+          const analytics = analyticsFor(item);
+          return {
+            scans: sum.scans + analytics.totalScans,
+            arOpens: sum.arOpens + analytics.arOpens,
+            markerLocks: sum.markerLocks + analytics.markerLocks,
+            ctaClicks: sum.ctaClicks + analytics.ctaClicks
+          };
+        },
+        { scans: 0, arOpens: 0, markerLocks: 0, ctaClicks: 0 }
+      ),
+    [items]
+  );
 
   const loadItems = useCallback(async (activeToken = token) => {
     if (!activeToken) {
@@ -194,11 +245,31 @@ export function AdminDashboard() {
     setNotice("QR URL gekopieerd.");
   }
 
+  async function downloadQrCode(slug: string) {
+    const qrUrl = `${origin}/q/${slug}`;
+    const dataUrl = await QRCode.toDataURL(qrUrl, {
+      width: 2048,
+      margin: 4,
+      errorCorrectionLevel: "H",
+      color: {
+        dark: "#071414",
+        light: "#ffffff"
+      }
+    });
+    const downloadLink = document.createElement("a");
+
+    downloadLink.href = dataUrl;
+    downloadLink.download = `oddunit-qr-${slug}.png`;
+    downloadLink.click();
+    setNotice("QR PNG gedownload.");
+  }
+
   return (
     <main className="shell admin-shell">
       <header className="topbar">
-        <Link className="brand" href="/">
-          <span className="brand-mark">OU</span>
+        <Link className="brand brand-full" href="/">
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="brand-logo" src="/logos/logo-black-studio.svg" alt="OddUnit Studio" />
           <span>QR admin</span>
         </Link>
         <nav className="nav">
@@ -208,6 +279,29 @@ export function AdminDashboard() {
           </button>
         </nav>
       </header>
+
+      <section className="admin-kpi-grid" aria-label="Analytics overzicht">
+        <div>
+          <ScanLine size={22} />
+          <strong>{compactNumber(totals.scans)}</strong>
+          <span>QR scans</span>
+        </div>
+        <div>
+          <BarChart3 size={22} />
+          <strong>{compactNumber(totals.arOpens)}</strong>
+          <span>AR opens</span>
+        </div>
+        <div>
+          <Box size={22} />
+          <strong>{compactNumber(totals.markerLocks)}</strong>
+          <span>Marker locks</span>
+        </div>
+        <div>
+          <MousePointerClick size={22} />
+          <strong>{compactNumber(totals.ctaClicks)}</strong>
+          <span>CTA clicks</span>
+        </div>
+      </section>
 
       <section className="admin-grid">
         <form className="panel admin-form" onSubmit={createItem}>
@@ -244,7 +338,7 @@ export function AdminDashboard() {
                   slug: current.slug ? current.slug : slugify(title)
                 }));
               }}
-              placeholder="OddUnit business card"
+              placeholder="OddUnit Studio"
             />
           </label>
 
@@ -291,7 +385,7 @@ export function AdminDashboard() {
                 <input
                   value={form.modelUrl}
                   onChange={(event) => setForm((current) => ({ ...current, modelUrl: event.target.value }))}
-                  placeholder="/models/oddunit-logo.gltf"
+                  placeholder="/models/logo-black-studio-super-thick.gltf"
                 />
               </label>
 
@@ -336,6 +430,9 @@ export function AdminDashboard() {
             {items.map((item) => {
               const draft = drafts[item.slug];
               const qrUrl = `${origin}/q/${item.slug}`;
+              const analytics = analyticsFor(item);
+              const recentDays = analytics.days.slice(-7);
+              const maxRecentScans = Math.max(...recentDays.map((day) => day.scans), 1);
 
               return (
                 <article className="qr-row" key={item.id}>
@@ -348,6 +445,35 @@ export function AdminDashboard() {
                         <code>{qrUrl}</code>
                       </div>
                       <span className={`status-pill ${item.status}`}>{item.status}</span>
+                    </div>
+
+                    <div className="row-analytics">
+                      <span>
+                        <ScanLine size={15} />
+                        {compactNumber(analytics.totalScans)} scans
+                      </span>
+                      <span>
+                        <BarChart3 size={15} />
+                        {compactNumber(analytics.arOpens)} AR
+                      </span>
+                      <span>
+                        <MousePointerClick size={15} />
+                        {compactNumber(analytics.ctaClicks)} clicks
+                      </span>
+                      <span>{formatLastEvent(analytics.lastEventAt)}</span>
+                      <div className="analytics-bars" aria-label={`Laatste 7 dagen voor ${item.title}`}>
+                        {recentDays.length ? (
+                          recentDays.map((day) => (
+                            <span
+                              key={day.date}
+                              style={{ height: `${Math.max((day.scans / maxRecentScans) * 100, 12)}%` }}
+                              title={`${day.date}: ${day.scans} scans`}
+                            />
+                          ))
+                        ) : (
+                          <span className="empty-bar" />
+                        )}
+                      </div>
                     </div>
 
                     <div className="row-fields">
@@ -385,9 +511,12 @@ export function AdminDashboard() {
                       <button className="icon-button" type="button" onClick={() => copyQrUrl(item.slug)} aria-label="Kopieer QR URL">
                         <Clipboard size={17} />
                       </button>
-                      <Link className="icon-button" href={`/q/${item.slug}`} aria-label="Open QR route">
+                      <button className="icon-button" type="button" onClick={() => downloadQrCode(item.slug)} aria-label="Download QR PNG">
+                        <Download size={17} />
+                      </button>
+                      <a className="icon-button" href={qrUrl} aria-label="Open QR route">
                         <ExternalLink size={17} />
-                      </Link>
+                      </a>
                       <button
                         className="icon-button danger"
                         type="button"
@@ -396,7 +525,7 @@ export function AdminDashboard() {
                       >
                         <Archive size={17} />
                       </button>
-                      <span className="scan-count">KV</span>
+                      <span className="scan-count">{item.kind === "ar" ? "AR + redirect" : "redirect"}</span>
                     </div>
                   </div>
                 </article>
